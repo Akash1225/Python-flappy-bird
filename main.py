@@ -30,6 +30,8 @@ score_sound = pygame.mixer.Sound("sounds/score.mp3")
 fly_sound = pygame.mixer.Sound("sounds/fly.mp3")
 
 # msg display function
+
+
 def msg(text, x, y, color: tuple, size):
     font = pygame.font.SysFont("Times new Roman", size)
     txt = font.render(text, True, color)
@@ -44,10 +46,26 @@ def gameover():
     pygame.display.update()
     time.sleep(5)
 
+# set highscore
+
+
+def HS(score):
+    try:
+        with open("highScore.txt", "r") as file:
+            high_num = int(file.read())
+            if high_num < score:
+                with open("highScore.txt", "w") as FileWrite:
+                    FileWrite.write(f"{score}")
+            return high_num
+    except:
+        with open("highScore.txt", "w") as FileWrite:
+            FileWrite.write(f"{score}")
+
 
 # game loop
 def gameLoop():
-    global GAME,WIDTH,HEIGHT,SCORE
+    global GAME, WIDTH, HEIGHT, SCORE
+    SCORE = 0
     GAME = True
 
     # bird
@@ -98,24 +116,26 @@ def gameLoop():
 
         # DIsplay score
         msg(f"{SCORE}", WIDTH/2-60, 0, (0, 0, 0), 30)
+        msg(f"{HS(SCORE)}", WIDTH-60, 0, (0, 0, 0), 30)
 
         # update screen
         clock.tick(FPS)
         pygame.display.update()
 
-if __name__== "__main__":
+
+if __name__ == "__main__":
     LOOP = True
     while LOOP:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 LOOP = False
-            
+
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_SPACE]:
                 gameLoop()
             elif pressed[pygame.K_q]:
                 LOOP = False
-        
-        scr.fill((0,0,0))
-        msg("Space to Play Q for Exit",WIDTH/2-60,HEIGHT/2,(0,255,0),15)
+
+        scr.fill((0, 0, 0))
+        msg("Space to Play Q for Exit", WIDTH/2-60, HEIGHT/2, (0, 255, 0), 15)
         pygame.display.update()
