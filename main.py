@@ -116,7 +116,7 @@ def gameLoop():
 
         # DIsplay score
         msg(f"{SCORE}", WIDTH/2-60, 0, (0, 0, 0), 30)
-        msg(f"{HS(SCORE)}", WIDTH-60, 0, (0, 0, 0), 30)
+        msg(f"{HS(SCORE)}", WIDTH-60, 0, (255, 0, 0), 30)
 
         # update screen
         clock.tick(FPS)
