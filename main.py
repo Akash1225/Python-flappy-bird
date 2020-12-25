@@ -29,15 +29,7 @@ bgIMG = pygame.transform.scale(bgIMG, (WIDTH, HEIGHT))
 score_sound = pygame.mixer.Sound("sounds/score.mp3")
 fly_sound = pygame.mixer.Sound("sounds/fly.mp3")
 
-# bird
-player = Bird(scr, 100, 100, 25)
-
-# pipe
-pipe = [Pipe(scr, 100, WIDTH, HEIGHT)]
-
 # msg display function
-
-
 def msg(text, x, y, color: tuple, size):
     font = pygame.font.SysFont("Times new Roman", size)
     txt = font.render(text, True, color)
@@ -54,49 +46,76 @@ def gameover():
 
 
 # game loop
-while GAME:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            GAME = False
+def gameLoop():
+    global GAME,WIDTH,HEIGHT,SCORE
+    GAME = True
 
-        pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_UP]:
-            player.up()
-            fly_sound.play()
-
-    # scr.fill((255, 255, 255))
-    scr.blit(bgIMG, (0, 0))
-
-    # PLAYER
-    player.update()
-    player.show()
-
-    # when player hit the ground
-    if player.y < 0 or player.y > HEIGHT:
-        gameover()
+    # bird
+    player = Bird(scr, 100, 100, 25)
 
     # pipe
-    for i in pipe:
-        i.update()
-        i.show()
+    pipe = [Pipe(scr, 100, WIDTH, HEIGHT)]
 
-        # add pipe
-        if (i.x == 200):
-            pipe.append(Pipe(scr, 80, WIDTH, HEIGHT))
+    while GAME:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                GAME = False
 
-        # add score
-        if i.x == player.x:
-            SCORE += 1
-            score_sound.play()
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_UP]:
+                player.up()
+                fly_sound.play()
 
-        # hit the pipe
-        if i.hits(player):
+        # scr.fill((255, 255, 255))
+        scr.blit(bgIMG, (0, 0))
+
+        # PLAYER
+        player.update()
+        player.show()
+
+        # when player hit the ground
+        if player.y < 0 or player.y > HEIGHT:
             gameover()
-            print("HIT")
 
-    # DIsplay score
-    msg(f"{SCORE}", WIDTH/2-60, 0, (0, 0, 0), 30)
+        # pipe
+        for i in pipe:
+            i.update()
+            i.show()
 
-    # update screen
-    clock.tick(FPS)
-    pygame.display.update()
+            # add pipe
+            if (i.x == 200):
+                pipe.append(Pipe(scr, 80, WIDTH, HEIGHT))
+
+            # add score
+            if i.x == player.x:
+                SCORE += 1
+                score_sound.play()
+
+            # hit the pipe
+            if i.hits(player):
+                gameover()
+                print("HIT")
+
+        # DIsplay score
+        msg(f"{SCORE}", WIDTH/2-60, 0, (0, 0, 0), 30)
+
+        # update screen
+        clock.tick(FPS)
+        pygame.display.update()
+
+if __name__== "__main__":
+    LOOP = True
+    while LOOP:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                LOOP = False
+            
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_SPACE]:
+                gameLoop()
+            elif pressed[pygame.K_q]:
+                LOOP = False
+        
+        scr.fill((0,0,0))
+        msg("Space to Play Q for Exit",WIDTH/2-60,HEIGHT/2,(0,255,0),15)
+        pygame.display.update()
