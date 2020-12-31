@@ -104,6 +104,10 @@ def gameLoop():
             if (i.x == 200):
                 pipe.append(Pipe(scr, 80, WIDTH, HEIGHT))
 
+            # remove pipe when pipe<0
+            if i.x+30<=0:
+                pipe.remove(i)
+
             # add score
             if i.x == player.x:
                 SCORE += 1
@@ -113,6 +117,8 @@ def gameLoop():
             if i.hits(player):
                 gameover()
                 print("HIT")
+
+        print(len(pipe))
 
         # DIsplay score
         msg(f"{SCORE}", WIDTH/2-60, 0, (0, 0, 0), 30)
